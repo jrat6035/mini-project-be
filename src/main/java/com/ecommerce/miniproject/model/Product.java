@@ -15,34 +15,36 @@ public class Product {
     private String productId;
 
     private String productName;
-
     private int productPrice;
     private String productDescription;
-
-    private Date productListedDate;
-
+    private Date productUpdatedDate;
     private int productQuantity;
-
     private String productStatus;
+    private boolean productActive;
 
     public Product() {
     }
-    public Product(String productId, String productName, int productPrice, Date productListedDate, int productQuantity, String productStatus, String productDescription) {
+    public Product(String productId, String productName, int productPrice, Date productListedDate, int productQuantity, String productStatus, String productDescription, boolean productActive) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
-        this.productListedDate = productListedDate;
+        this.productUpdatedDate = productListedDate;
         this.productQuantity = productQuantity;
         this.productStatus = productStatus;
         this.productDescription = productDescription;
+        this.productActive = productActive;
     }
 
     public String getProductId() {
         return productId;
     }
 
-    public Date getProductListedDate() {
-        return productListedDate;
+    public Date getProductUpdatedDate() {
+        return productUpdatedDate;
+    }
+
+    public void setProductUpdatedDate(Date productUpdatedDate) {
+        this.productUpdatedDate = productUpdatedDate;
     }
 
     public String getProductName() {
@@ -83,5 +85,13 @@ public class Product {
 
     public void setProductDescription(String productDescription) {
         this.productDescription = productDescription;
+    }
+
+    public boolean isProductActive() {
+        return productActive;
+    }
+
+    public void setProductActive(boolean productActive) {
+        this.productActive = productActive;
     }
 }
