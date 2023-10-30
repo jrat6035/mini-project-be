@@ -5,9 +5,9 @@ import com.ecommerce.miniproject.model.Product;
 import java.util.List;
 
 public interface ProductService {
-    List<Product> getProducts(boolean getOnlyActiveProducts);
+    List<Product> getProducts(String getOnlyActiveProducts);
     Product createProduct(Product product);
-    Product getProduct(String productId);
-    Product updateProduct(String productId, Product product);
-    void deactivateProduct(String productId);
+    Product getProduct(String id);
+    Product updateProduct(String id, Product product);
+    Product deactivateProduct(String id);
 }

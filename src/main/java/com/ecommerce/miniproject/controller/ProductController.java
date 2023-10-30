@@ -1,34 +1,52 @@
 package com.ecommerce.miniproject.controller;
 
+import com.ecommerce.miniproject.dto.ProductDTO;
+import com.ecommerce.miniproject.dto.ResponseObject;
+import com.ecommerce.miniproject.service.ProductService;
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ecommerce.miniproject.model.Product;
-import com.ecommerce.miniproject.repository.ProductRepository;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @RequestMapping("/${api.path.products}")
-public class ProductController {
+public class ProductController extends AbstractController {
+    @Autowired
+    private ProductService productService;
 
     @Autowired
-    private ProductRepository productRepository;
+    private ModelMapper modelMapper;
 
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public ResponseEntity<ResponseObject> getProducts(
+            @RequestParam(name = "activeStatus", defaultValue = "Active", required = false) String activeStatus) {
+        return sendFoundResponse(productService.getProducts(activeStatus));
     }
 
     @PostMapping
-    public Product createProduct(@RequestBody Product product) {
-        return productRepository.save(product);
+    public ResponseEntity<ResponseObject> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+        Product product = modelMapper.map(productDTO, Product.class);
+        return sendCreatedResponse(productService.createProduct(product));
     }
 
-    @GetMapping("/{productId}")
-    public Product getProductById(@PathVariable String productId) {
-        return null;
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseObject> getProductById(@PathVariable String id) {
+        return sendFoundResponse(productService.getProduct(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseObject> updateProductById(@PathVariable String id, @Valid @RequestBody ProductDTO productDTO) {
+        Product product = modelMapper.map(productDTO, Product.class);
+        return sendSuccessResponse(productService.updateProduct(id, product));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseObject> removeProduct(@PathVariable String id) {
+        return sendSuccessResponse(productService.deactivateProduct(id));
     }
 }
