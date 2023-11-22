@@ -1,7 +1,5 @@
 package com.ecommerce.miniproject.dto;
 
-import com.ecommerce.miniproject.model.ProductOrder;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -18,7 +16,7 @@ public class CartDTO {
     @NotEmpty(message = "User id cannot be empty")
     private String userId;
 
-    private List<ProductOrder> productList;
+    private String productId;
 
     private int totalPrice;
 

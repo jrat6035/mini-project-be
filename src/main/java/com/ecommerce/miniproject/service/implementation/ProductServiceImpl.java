@@ -3,9 +3,11 @@ package com.ecommerce.miniproject.service.implementation;
 import com.ecommerce.miniproject.constant.Constants;
 import com.ecommerce.miniproject.constant.ErrorMessages;
 import com.ecommerce.miniproject.exceptions.Exceptions;
+import com.ecommerce.miniproject.model.Cart;
 import com.ecommerce.miniproject.model.Product;
 import com.ecommerce.miniproject.repository.ProductRepository;
 import com.ecommerce.miniproject.service.ProductService;
+import com.ecommerce.miniproject.util.DateUtil;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProduct(String id) {
+    public Product getProductById(String id) {
          try {
             Product foundProduct = productRepository.findById(id).orElseThrow(() ->
                     new Exceptions(ErrorMessages.ERROR_PRODUCT_NOT_FOUND, HttpStatus.NOT_FOUND));
@@ -89,12 +91,16 @@ public class ProductServiceImpl implements ProductService {
             if (!foundProduct.getProductStatus().equalsIgnoreCase(Constants.ACTIVE)) {
                 throw new Exceptions(ErrorMessages.ERROR_PRODUCT_NOT_ACTIVE, HttpStatus.FOUND);
             }
-            modelMapper.map(updatedProduct, foundProduct);
+            foundProduct.setProductName(updatedProduct.getProductName());
+            foundProduct.setProductPrice(updatedProduct.getProductPrice());
+            foundProduct.setProductDescription(updatedProduct.getProductDescription());
+            foundProduct.setProductQuantity(updatedProduct.getProductQuantity());
             foundProduct.setProductUpdatedDate(CURRENT_DATE);
+
             return productRepository.save(foundProduct);
         } catch (Exception exception) {
             LOGGER.error("Error occurred when updating Product");
-            throw new Exceptions("",
+            throw new Exceptions(exception.getMessage(),
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -109,11 +115,55 @@ public class ProductServiceImpl implements ProductService {
                 throw new Exceptions(ErrorMessages.ERROR_PRODUCT_NOT_ACTIVE, HttpStatus.FOUND);
             }
             foundProduct.setProductStatus(Constants.INACTIVE);
+            foundProduct.setProductUpdatedDate(CURRENT_DATE);
             return productRepository.save(foundProduct);
         } catch (Exception exception) {
             LOGGER.error("Error occurred when removing Product");
             throw new Exceptions("",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public float getCartAmount(List<Cart> cartItems) {
+        float totalCartAmount = 0;
+
+        for (Cart cart : cartItems) {
+            float cartAmount;
+            int availableProductQuantity = 0;
+            String productId = cart.getProductId();
+            Product product = getProductById(productId);
+
+            if (product.getProductQuantity() < cart.getProductQuantity()) {
+                cartAmount = product.getProductPrice() * product.getProductQuantity();
+                cart.setProductQuantity(product.getProductQuantity());
+            } else {
+                cartAmount = cart.getProductQuantity() * product.getProductPrice();
+                availableProductQuantity = product.getProductQuantity() - cart.getProductQuantity();
+            }
+            totalCartAmount += cartAmount;
+            product.setProductQuantity(availableProductQuantity);
+            cart.setProductName(product.getProductName());
+            cart.setTotalAmount(cartAmount);
+            cart.setLastUpdatedDateTime(DateUtil.getCurrentDateTime());
+            productRepository.save(product);
+        }
+        return totalCartAmount;
+    }
+
+    public float getProductAmount(String productId, int quantity) {
+        float orderAmount;
+        int availableProductQuantity = 0;
+        Product product = getProductById(productId);
+
+        if (product.getProductQuantity() < quantity) {
+            orderAmount = product.getProductPrice() * product.getProductQuantity();
+        } else {
+            orderAmount = quantity * product.getProductPrice();
+            availableProductQuantity = product.getProductQuantity() - quantity;
+        }
+        product.setProductQuantity(availableProductQuantity);
+        productRepository.save(product);
+
+        return orderAmount;
     }
 }

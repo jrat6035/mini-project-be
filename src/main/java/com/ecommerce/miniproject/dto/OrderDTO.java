@@ -1,6 +1,7 @@
 package com.ecommerce.miniproject.dto;
 
-import com.ecommerce.miniproject.model.ProductOrder;
+import com.ecommerce.miniproject.model.Cart;
+import com.ecommerce.miniproject.model.User;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -15,15 +16,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDTO {
-    @NotEmpty(message = "User id cannot be empty")
-    private String userId;
+    @NotEmpty(message = "User email cannot be empty")
+    private String userEmail;
 
-    @NotEmpty(message = "Cart id cannot be empty")
-    private String cartId;
+    @NotEmpty(message = "Cart items cannot be empty")
+    private List<Cart> cartItems;
 
-    @Min(value = 0, message = "Total order price must be at least 0")
-    private int totalPrice;
-
-    @NotNull
-    private Date createdDate;
+    private String description;
 }

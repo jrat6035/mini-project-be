@@ -16,4 +16,7 @@ public class UserDTO {
     private String userFullName;
     @NotNull
     private boolean userActive;
+    @NotEmpty(message = "User type cannot be empty")
+    private boolean userType;
+
 }

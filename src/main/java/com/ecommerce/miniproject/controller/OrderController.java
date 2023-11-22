@@ -25,13 +25,17 @@ public class OrderController extends AbstractController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseObject> createOrder(@Valid @RequestBody OrderDTO orderDTO) {
-        Order order = modelMapper.map(orderDTO, Order.class);
-        return sendCreatedResponse(orderService.createOrder(order));
+    public ResponseEntity<ResponseObject> placeOrder(@RequestBody OrderDTO orderDTO) {
+        return sendCreatedResponse(orderService.placeOrder(orderDTO));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getOrderById(@PathVariable String id) {
         return sendFoundResponse(orderService.getOrderById(id));
+    }
+
+    @GetMapping("/{userEmail}")
+    public ResponseEntity<ResponseObject> getOrderByUserEmail(@PathVariable String userEmail) {
+        return sendFoundResponse(orderService.getOrderByEmail(userEmail));
     }
 }

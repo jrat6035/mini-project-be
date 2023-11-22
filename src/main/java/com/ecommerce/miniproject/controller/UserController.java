@@ -25,24 +25,22 @@ public class UserController extends AbstractController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseObject> createUser(@Valid @RequestBody UserDTO userDTO) {
-        User createdUser = modelMapper.map(userDTO, User.class);
-        return sendCreatedResponse(userService.createUser(createdUser));
+    public ResponseEntity<ResponseObject> createUser(@RequestBody User user) {
+        return sendCreatedResponse(userService.createUser(user));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ResponseObject> getUserById(@PathVariable String id) {
-        return sendFoundResponse(userService.getUserById(id));
+    @GetMapping("/{email}")
+    public ResponseEntity<ResponseObject> getUserById(@PathVariable String email) {
+        return sendFoundResponse(userService.getUserByEmail(email));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ResponseObject> updateUser(@PathVariable String id, @Valid @RequestBody UserDTO userDTO) {
-        User updatedUser = modelMapper.map(userDTO, User.class);
-        return sendSuccessResponse(userService.updateUser(id, updatedUser));
+    @PutMapping("/{email}")
+    public ResponseEntity<ResponseObject> updateUser(@PathVariable String email, @Valid @RequestBody User user) {
+        return sendSuccessResponse(userService.updateUser(email, user));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseObject> deactivateUser(@PathVariable String id) {
-        return sendSuccessResponse(userService.deactivateUser(id));
+    @DeleteMapping("/{email}")
+    public ResponseEntity<ResponseObject> deactivateUser(@PathVariable String email) {
+        return sendSuccessResponse(userService.deactivateUser(email));
     }
 }

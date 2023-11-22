@@ -9,9 +9,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "users")
 public class User {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(unique = true)
     private String userEmail;
@@ -19,4 +21,10 @@ public class User {
     private String userFullName;
 
     private boolean userActive;
+
+    private String userType;
+
+    public User(String userEmail) {
+        this.userEmail = userEmail;
+    }
 }

@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ecommerce.miniproject.model.Product;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/${api.path.products}")
 public class ProductController extends AbstractController {
@@ -29,19 +27,17 @@ public class ProductController extends AbstractController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseObject> createProduct(@Valid @RequestBody ProductDTO productDTO) {
-        Product product = modelMapper.map(productDTO, Product.class);
+    public ResponseEntity<ResponseObject> createProduct(@RequestBody Product product) {
         return sendCreatedResponse(productService.createProduct(product));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ResponseObject> getProductById(@PathVariable String id) {
-        return sendFoundResponse(productService.getProduct(id));
+        return sendFoundResponse(productService.getProductById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseObject> updateProductById(@PathVariable String id, @Valid @RequestBody ProductDTO productDTO) {
-        Product product = modelMapper.map(productDTO, Product.class);
+    public ResponseEntity<ResponseObject> updateProductById(@PathVariable String id, @RequestBody Product product) {
         return sendSuccessResponse(productService.updateProduct(id, product));
     }
 

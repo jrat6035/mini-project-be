@@ -10,4 +10,5 @@ import org.springframework.http.HttpStatus;
 public class ResponseObject {
     private Object data;
     private HttpStatus status;
+    private boolean success;
 }

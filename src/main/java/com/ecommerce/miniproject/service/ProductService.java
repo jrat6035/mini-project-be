@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProductService {
     List<Product> getProducts(String getOnlyActiveProducts);
     Product createProduct(Product product);
-    Product getProduct(String id);
+    Product getProductById(String id);
     Product updateProduct(String id, Product product);
     Product deactivateProduct(String id);
 }

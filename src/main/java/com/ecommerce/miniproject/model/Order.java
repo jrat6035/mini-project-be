@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,21 +20,15 @@ public class Order {
 
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private String userId;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = ProductOrder.class)
-    @JoinColumn(name = "cart_id", referencedColumnName = "id")
-    private Cart cartId;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Cart.class)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    private List<Cart> cartItems;
 
-    @OneToOne
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
+    private String description;
 
-    private int totalPrice;
+    private float totalPrice;
 
-    private Date createdDate;
+    private String createdDate;
 }
