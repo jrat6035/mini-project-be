@@ -8,7 +8,6 @@ import com.ecommerce.miniproject.model.Product;
 import com.ecommerce.miniproject.repository.ProductRepository;
 import com.ecommerce.miniproject.service.ProductService;
 import com.ecommerce.miniproject.util.DateUtil;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
 
     @Override
     public List<Product> getProducts(String getOnlyActiveProducts) {
@@ -64,7 +60,7 @@ public class ProductServiceImpl implements ProductService {
             return foundProduct;
         } catch (Exception exception) {
             LOGGER.error("Error occurred when retrieving Product");
-            throw new Exceptions("",
+            throw new Exceptions("Error occurred when retrieving the Product",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -124,6 +120,23 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    public float getProductAmount(String productId, int quantity) {
+        float orderAmount;
+        int availableProductQuantity = 0;
+        Product product = getProductById(productId);
+
+        if (product.getProductQuantity() < quantity) {
+            orderAmount = product.getProductPrice() * product.getProductQuantity();
+        } else {
+            orderAmount = quantity * product.getProductPrice();
+            availableProductQuantity = product.getProductQuantity() - quantity;
+        }
+        product.setProductQuantity(availableProductQuantity);
+        productRepository.save(product);
+
+        return orderAmount;
+    }
+
     public float getCartAmount(List<Cart> cartItems) {
         float totalCartAmount = 0;
 
@@ -148,22 +161,5 @@ public class ProductServiceImpl implements ProductService {
             productRepository.save(product);
         }
         return totalCartAmount;
-    }
-
-    public float getProductAmount(String productId, int quantity) {
-        float orderAmount;
-        int availableProductQuantity = 0;
-        Product product = getProductById(productId);
-
-        if (product.getProductQuantity() < quantity) {
-            orderAmount = product.getProductPrice() * product.getProductQuantity();
-        } else {
-            orderAmount = quantity * product.getProductPrice();
-            availableProductQuantity = product.getProductQuantity() - quantity;
-        }
-        product.setProductQuantity(availableProductQuantity);
-        productRepository.save(product);
-
-        return orderAmount;
     }
 }

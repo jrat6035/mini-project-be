@@ -1,9 +1,7 @@
 package com.ecommerce.miniproject.controller;
 
-import com.ecommerce.miniproject.dto.ProductDTO;
 import com.ecommerce.miniproject.dto.ResponseObject;
 import com.ecommerce.miniproject.service.ProductService;
-import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

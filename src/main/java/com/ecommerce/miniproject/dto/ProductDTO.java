@@ -15,7 +15,7 @@ public class ProductDTO {
     private String productName;
 
     @Min(value = 1, message = "Product price must be at least 1")
-    @Max(value = 1000, message = "Product price cannot exceed 1000")
+    @Max(value = 10000, message = "Product price cannot exceed 1000")
     private int productPrice;
 
     private String productDescription;
@@ -23,12 +23,12 @@ public class ProductDTO {
     @NotNull
     private Date productUpdatedDate;
 
-    @Min(value = 0, message = "Product price must be at least 0")
-    @Max(value = 20, message = "Product price cannot exceed 20")
+    @Min(value = 0, message = "Product quantity must be at least 0")
+    @Max(value = 10000, message = "Product quantity cannot exceed 20")
     private int productQuantity;
 
     @NotEmpty
-    @Pattern(regexp = "^(Available|Unavailable|OutOfStock)$", message = "Product status is not a valid input")
+    @Pattern(regexp = "^(Active|Inactive)$", message = "Product status is not a valid input")
     private String productStatus;
 
     private String productImageUrl;

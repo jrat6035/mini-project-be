@@ -18,5 +18,4 @@ public class UserDTO {
     private boolean userActive;
     @NotEmpty(message = "User type cannot be empty")
     private boolean userType;
-
 }
